@@ -28,34 +28,34 @@ public class TiGcmModule extends KrollModule
 {
     private GoogleCloudMessaging gcm;
 
-	// Standard Debugging variables
-	private static final String LCAT = "TiGcmModule";
-	private static final boolean DBG = TiConfig.LOGD;
+    // Standard Debugging variables
+    private static final String LCAT = "TiGcmModule";
+    private static final boolean DBG = TiConfig.LOGD;
 
     public static final String PROPERTY_SENDER_ID = "GCM_sender_id";
 
-	private static final String PROPERTY_ON_SUCCESS = "success";
-	private static final String PROPERTY_ON_ERROR = "error";
-	private static final String PROPERTY_ON_DATA = "callback";
+    private static final String PROPERTY_ON_SUCCESS = "success";
+    private static final String PROPERTY_ON_ERROR = "error";
+    private static final String PROPERTY_ON_DATA = "callback";
 
     private static final String EVENT_PROPERTY_DEVICE_TOKEN = "deviceToken";
     private static final String EVENT_PROPERTY_ERROR = "error";
     private static final String EVENT_PROPERTY_DATA = "data";
     private static final String EVENT_PROPERTY_IN_BACKGROUND = "inBackground";
 
-	private static KrollFunction onSuccessCallback;
-	private static KrollFunction onErrorCallback;
-	private static KrollFunction onDataCallback;
+    private static KrollFunction onSuccessCallback;
+    private static KrollFunction onErrorCallback;
+    private static KrollFunction onDataCallback;
 
     private static KrollDict pendingData = null;
 
-	public TiGcmModule()
-	{
-		super();
+    public TiGcmModule()
+    {
+        super();
 
         // Titanium should only ever create one instance.
         instance = this;
-	}
+    }
 
     private static TiGcmModule instance = null;
 
@@ -63,10 +63,10 @@ public class TiGcmModule extends KrollModule
         return instance;
     }
 
-	@Kroll.onAppCreate
-	public static void onAppCreate(TiApplication app) {
-		// put module init code that needs to run when the application is created
-	}
+    @Kroll.onAppCreate
+    public static void onAppCreate(TiApplication app) {
+        // put module init code that needs to run when the application is created
+    }
 
     public static void logd(String message) {
         if (DBG) {
@@ -74,16 +74,16 @@ public class TiGcmModule extends KrollModule
         }
     }
 
-	@Kroll.method
-	public void registerForPushNotifications(KrollDict args) {
+    @Kroll.method
+    public void registerForPushNotifications(KrollDict args) {
 
-		Object successCallbackArg = args.get(PROPERTY_ON_SUCCESS);
+        Object successCallbackArg = args.get(PROPERTY_ON_SUCCESS);
         Object errorCallbackArg = args.get(PROPERTY_ON_ERROR);
         Object dataCallbackArg = args.get(PROPERTY_ON_DATA);
 
         if (successCallbackArg instanceof KrollFunction) {
             onSuccessCallback = (KrollFunction) successCallbackArg;
-		}
+        }
         if (errorCallbackArg instanceof KrollFunction) {
             onErrorCallback = (KrollFunction) errorCallbackArg;
         }
@@ -123,7 +123,7 @@ public class TiGcmModule extends KrollModule
             }
         }.execute(null, null, null);
 
-	}
+    }
 
     @Kroll.method
     public GcmNotificationProxy createNotification(Object[] args) {
