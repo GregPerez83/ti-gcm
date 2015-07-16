@@ -14,11 +14,19 @@ import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiC;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class GcmIntentService extends IntentService
 {
     private static final String TAG = "GcmIntentService";
+
+    private static final String[] ignoredExtras = {
+        "from", "collapse_key", "android.support.content.wakelockid"
+    };
+
+    private static final HashSet<String> ignoredExtrasSet = new HashSet<String>(Arrays.asList(ignoredExtras));
 
     public GcmIntentService() {
         super(GcmIntentService.class.getSimpleName());
@@ -40,12 +48,7 @@ public class GcmIntentService extends IntentService
                 //
 
                 // Generate Data
-                HashMap<String, Object> jsonData = new HashMap<String, Object>();
-                for (String key : extras.keySet()) {
-                    if (extras.get(key) != null && !"".equals(extras.get(key))) {
-                        jsonData.put(key, extras.get(key));
-                    }
-                }
+                HashMap<String, Object> jsonData = getDataFromExtras(extras);
 
                 // Convert JSON format
                 JSONObject json = new JSONObject(jsonData);
@@ -77,6 +80,18 @@ public class GcmIntentService extends IntentService
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);
+    }
+
+    private HashMap<String, Object> getDataFromExtras(Bundle extras) {
+
+        HashMap<String, Object> jsonData = new HashMap<String, Object>();
+        for (String key : extras.keySet()) {
+            if (!ignoredExtrasSet.contains(key) &&
+                    extras.get(key) != null && !"".equals(extras.get(key))) {
+                jsonData.put(key, extras.get(key));
+            }
+        }
+        return jsonData;
     }
 
     public static boolean isInForeground() {
