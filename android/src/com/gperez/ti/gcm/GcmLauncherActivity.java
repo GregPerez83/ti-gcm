@@ -35,10 +35,10 @@ public class GcmLauncherActivity extends Activity {
 
             startActivity(mainActivityIntent);
 
-            TiGcmModule.getInstance().fireData(data, true);
+            TiGcmModule.queueDataFromBackground(data);
 
         } else {
-            TiGcmModule.getInstance().fireData(data, true);
+            TiGcmModule.queueDataFromBackground(data);
             this.finish();
         }
     }

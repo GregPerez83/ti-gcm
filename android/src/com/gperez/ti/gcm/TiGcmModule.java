@@ -151,6 +151,15 @@ public class TiGcmModule extends KrollModule
         }
     }
 
+    public static void queueDataFromBackground(KrollDict data) {
+        TiGcmModule module = getInstance();
+        if (module != null) {
+            module.fireData(data, true);
+        } else {
+            pendingData = data;
+        }
+    }
+
     public void fireData(KrollDict data, Boolean inBackground) {
         if (onDataCallback != null) {
             KrollDict event = new KrollDict();
