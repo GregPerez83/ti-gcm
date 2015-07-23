@@ -4,16 +4,19 @@ import java.util.Date;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.TiContext;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.util.TiUIHelper;
 
+import org.appcelerator.titanium.view.TiDrawableReference;
 import ti.modules.titanium.android.AndroidModule;
 import android.app.Notification;
 import android.content.Context;
@@ -48,6 +51,10 @@ public class GcmNotificationProxy extends KrollProxy
         super.handleCreationDict(d);
         if (d == null) {
             return;
+        }
+
+        if (d.containsKey("largeIcon")) {
+            setLargeIcon((TiBlob)d.get("largeIcon"));
         }
 
         if (d.containsKey(TiC.PROPERTY_ICON)) {
@@ -117,6 +124,12 @@ public class GcmNotificationProxy extends KrollProxy
                 Log.w(TAG, "No image found for " + iconUrl);
             }
         }
+    }
+
+    @Kroll.method @Kroll.setProperty
+    public void setLargeIcon(TiBlob icon) {
+        TiDrawableReference ref = TiDrawableReference.fromBlob(getActivity(), icon);
+        notification.largeIcon = ref.getBitmap();
     }
 
     @Kroll.method @Kroll.setProperty
